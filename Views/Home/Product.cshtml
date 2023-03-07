@@ -1,0 +1,220 @@
+﻿@model IEnumerable<onlineStore.Models.Product>
+
+@{
+    var Title = "Latest Products";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    :root {
+        /* dark shades of primary color*/
+        --clr-primary-1: hsl(205, 86%, 17%);
+        --clr-primary-2: hsl(205, 77%, 27%);
+        --clr-primary-3: hsl(205, 72%, 37%);
+        --clr-primary-4: hsl(205, 63%, 48%);
+        /* primary/main color */
+        --clr-primary-5: hsl(205, 78%, 60%);
+        /* lighter shades of primary color */
+        --clr-primary-6: hsl(205, 89%, 70%);
+        --clr-primary-7: hsl(205, 90%, 76%);
+        --clr-primary-8: hsl(205, 86%, 81%);
+        --clr-primary-9: hsl(205, 90%, 88%);
+        --clr-primary-10: hsl(205, 100%, 96%);
+        /* darkest grey - used for headings */
+        --clr-grey-1: hsl(209, 61%, 16%);
+        --clr-grey-2: hsl(211, 39%, 23%);
+        --clr-grey-3: hsl(209, 34%, 30%);
+        --clr-grey-4: hsl(209, 28%, 39%);
+        /* grey used for paragraphs */
+        --clr-grey-5: hsl(210, 22%, 49%);
+        --clr-grey-6: hsl(209, 23%, 60%);
+        --clr-grey-7: hsl(211, 27%, 70%);
+        --clr-grey-8: hsl(210, 31%, 80%);
+        --clr-grey-9: hsl(212, 33%, 89%);
+        --clr-grey-10: hsl(210, 36%, 96%);
+        --clr-white: #fff;
+        --clr-red-dark: hsl(360, 67%, 44%);
+        --clr-red-light: hsl(360, 71%, 66%);
+        --clr-green-dark: hsl(125, 67%, 44%);
+        --clr-green-light: hsl(125, 71%, 66%);
+        --clr-black: #222;
+        --transition: all 0.3s linear;
+        --spacing: 0.1rem;
+        --radius: 0.75rem;
+        --light-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        --dark-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        --max-width: 1170px;
+        --fixed-width: 620px;
+        /* grey */
+        --grey-50: #f8fafc;
+        --grey-100: #f1f5f9;
+        --grey-200: #e2e8f0;
+        --grey-300: #cbd5e1;
+        --grey-400: #94a3b8;
+        --grey-500: #64748b;
+        --grey-600: #475569;
+        --grey-700: #334155;
+        --grey-800: #1e293b;
+        --grey-900: #0f172a;
+    }
+
+    #btn-container {
+        display: grid;
+        gap: 2rem;
+        margin-bottom: 4rem;
+    }
+
+    .btn {
+        padding: 0.35rem 0.75rem;
+        letter-spacing: 1.6px;
+        font-size: 0.75rem;
+        color: var(--clr-white);
+        background: var(--clr-primary-5);
+        border-radius: var(--radius);
+        border-color: transparent;
+        text-transform: uppercase;
+        transition: var(--transition);
+        cursor: pointer;
+    }
+
+    #btn-container {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+</style>
+
+<!-- page title -->
+<section class="section bg-cover overlay" data-background="images/backgrounds/page-title.jpg">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <h2 class="text-white mb-3">@Title</h2>
+                <!-- breadcrumb -->
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb bg-transparent p-0">
+                        <li class="breadcrumb-item font-weight-semebold"><a class="text-white" href="index.html">Home</a></li>
+                        <li class="breadcrumb-item font-weight-semebold active text-primary" aria-current="page">Latest Products</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- All Products -->
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar Widgets Column -->
+        <div class="col-md-3">
+            <!-- Categories Widget -->
+            <div class="card my-4">
+                <h5 class="card-header">Search</h5>
+                <div class="card-body">
+                    <div class="input-group" id="searchWrapper">
+                        <form action="/" onsubmit="return false">
+                            <input type="text" class="form-control"
+                                   name="searchBar"
+                                   id="search"
+                                   placeholder="Search for...">
+                        </form>
+                    </div>
+                </div>
+                <h5 class="card-header">Categories</h5>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3 col-sm-6 col-lg-6">
+                            <button type="button" class="mybtn btn btn-primary filter-btn" data-filter="all">
+                                All
+                            </button>
+                            <button type="button" class="mybtn btn btn-success filter-btn" data-filter="washer">
+                                Washer
+                            </button>
+                            <button type="button" class="mybtn btn btn-success filter-btn" data-filter="dryer">
+                                Dryer
+                            </button>
+                            <button type="button" class="mybtn btn btn-success filter-btn" data-filter="refrigerator">
+                                Refrigerator
+                            </button>
+                            <button type="button" class="mybtn btn btn-success filter-btn" data-filter="kits">
+                                Repair kits
+                            </button>
+                            <button type="button" class="mybtn btn btn-success btn-rounded filter-btn" data-filter="oven">
+                                Wall-Oven
+                            </button>
+                            <button type="button" class="mybtn btn btn-success btn-rounded filter-btn" data-filter="dishwasher">
+                                DishWasher
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="row">
+                @foreach (var product in Model)
+                {
+                    <div class="col-md-3 col-sm-6 col-xs-12 mb-4 store-products @product.Category.Name.ToLower()">
+                        <div id="store-products">
+                            <div class="core-features">
+                                <div class="circle">
+                                    <img src="@product.ImageUrl" alt="@product.Title" class="img-fluid">
+                                </div>
+                                <div class="product-details mb-3">
+                                    <h4>@product.Title</h4>
+                                    <p>List Price: <strike><b class="">$@product.ListPrice.ToString("0.00")</b></strike></p>
+                                    <p style="color:maroon">As low as: <b class="">$@product.Price100.ToString("0.00")</b></p>
+                                    <span class="mb-2">$@product.ListPrice.ToString("0.00")</span>
+                                    <hr />
+                                    <a asp-action="Details" class="btn btn-primary" asp-route-productId="@product.Id">Details</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts{
+    <script>
+        const baseURL = '/api/products';
+        const sectionCard = document.querySelector('#card');
+        const btns = document.querySelectorAll(".mybtn");
+        const storeProducts = document.querySelectorAll(".store-products");
+        //const search
+        for (let i = 0; i < btns.length; i++) {
+            btns[i].addEventListener("click", (e) => {
+                e.preventDefault();
+                const filter = e.target.dataset.filter;
+                console.log(filter);
+                storeProducts.forEach((product) => {
+                    if (filter === "all") {
+                        product.style.display = "grid";
+                    } else {
+                        if (product.classList.contains(filter)) {
+                            product.style.display = "grid";
+                        } else {
+                            product.style.display = "none";
+                        }
+                    }
+                });
+            });
+        }
+        //Search Filter
+        const search = document.getElementById("search");
+        const productName = document.querySelectorAll(".product-details h4");
+        search.addEventListener("keyup", filterProducts);
+        function filterProducts(e) {
+            const text = e.target.value.toLowerCase();
+            productName.forEach(function (product) {
+                console.log(product);
+                const item = product.firstChild.textContent;
+                if (item.toLowerCase().indexOf(text) != -1) {
+                    product.parentElement.parentElement.style.display = "block";
+                } else {
+                    product.parentElement.parentElement.style.display = "none";
+                }
+            })
+        }
+    </script>
+}
