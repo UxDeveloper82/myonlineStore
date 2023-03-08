@@ -3,8 +3,9 @@ using onlineStore.Data.Repository.IRepository;
 using onlineStore.Utility;
 using System.Security.Claims;
 
-namespace onlineStore.ViewComponents
+namespace onlineStore.Areas.UI.ViewComponents
 {
+    [Area("UI")]
     public class ShoppingCartViewComponent : ViewComponent
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -30,7 +31,6 @@ namespace onlineStore.ViewComponents
                         _unitOfWork.ShoppingCart.GetAll(u => u.ApplicationUserId == claim.Value).ToList().Count);
                     return View(HttpContext.Session.GetInt32(SD.SessionCart));
                 }
-
             }
             else
             {

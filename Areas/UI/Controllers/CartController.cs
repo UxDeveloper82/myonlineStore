@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity.UI.Services;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using onlineStore.Data.Repository.IRepository;
 using onlineStore.Models;
@@ -10,11 +11,11 @@ using System.Security.Claims;
 namespace onlineStore.Areas.Admin.Controllers
 {
     [Area("UI")]
+    [Authorize]
     public class CartController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IEmailSender _emailSender;
-
         [BindProperty]
         public ShoppingCartVM ShoppingCartVM { get; set; }
         public CartController(IUnitOfWork unitOfWork, IEmailSender emailSender)
@@ -49,15 +50,12 @@ namespace onlineStore.Areas.Admin.Controllers
 
             ShoppingCartVM = new ShoppingCartVM()
             {
-                ListCart = _unitOfWork.ShoppingCart.GetAll
-               (c => c.ApplicationUserId == claim.Value,
+                ListCart = _unitOfWork.ShoppingCart.GetAll(u => u.ApplicationUserId == claim.Value,
                 includeProperties: "Product"),
                 OrderHeader = new()
             };
-
-            ShoppingCartVM.OrderHeader.ApplicationUser =
-                _unitOfWork.ApplicationUser
-                .GetFirstOrDefault(c => c.Id == claim.Value);
+            ShoppingCartVM.OrderHeader.ApplicationUser = _unitOfWork.ApplicationUser.GetFirstOrDefault(
+                u => u.Id == claim.Value);
 
             ShoppingCartVM.OrderHeader.Name = ShoppingCartVM.OrderHeader.ApplicationUser.Name;
             ShoppingCartVM.OrderHeader.PhoneNumber = ShoppingCartVM.OrderHeader.ApplicationUser.PhoneNumber;
@@ -65,6 +63,8 @@ namespace onlineStore.Areas.Admin.Controllers
             ShoppingCartVM.OrderHeader.City = ShoppingCartVM.OrderHeader.ApplicationUser.City;
             ShoppingCartVM.OrderHeader.State = ShoppingCartVM.OrderHeader.ApplicationUser.State;
             ShoppingCartVM.OrderHeader.PostalCode = ShoppingCartVM.OrderHeader.ApplicationUser.PostalCode;
+
+
 
             foreach (var cart in ShoppingCartVM.ListCart)
             {
@@ -83,11 +83,13 @@ namespace onlineStore.Areas.Admin.Controllers
             var claimsIdentity = (ClaimsIdentity)User.Identity;
             var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
 
-            ShoppingCartVM.ListCart = _unitOfWork.ShoppingCart.GetAll(u =>
-            u.ApplicationUserId == claim.Value, includeProperties: "Product");
+            ShoppingCartVM.ListCart = _unitOfWork.ShoppingCart.GetAll(u => u.ApplicationUserId == claim.Value,
+                includeProperties: "Product");
+
 
             ShoppingCartVM.OrderHeader.OrderDate = System.DateTime.Now;
             ShoppingCartVM.OrderHeader.ApplicationUserId = claim.Value;
+
 
             foreach (var cart in ShoppingCartVM.ListCart)
             {
@@ -95,9 +97,7 @@ namespace onlineStore.Areas.Admin.Controllers
                     cart.Product.Price50, cart.Product.Price100);
                 ShoppingCartVM.OrderHeader.OrderTotal += (cart.Price * cart.Count);
             }
-
-            ApplicationUser applicationUser = _unitOfWork.ApplicationUser
-                .GetFirstOrDefault(u => u.Id == claim.Value);
+            ApplicationUser applicationUser = _unitOfWork.ApplicationUser.GetFirstOrDefault(u => u.Id == claim.Value);
 
             if (applicationUser.CompanyId.GetValueOrDefault() == 0)
             {
@@ -124,10 +124,12 @@ namespace onlineStore.Areas.Admin.Controllers
                 _unitOfWork.OrderDetails.Add(orderDetail);
                 _unitOfWork.Save();
             }
+
+
             if (applicationUser.CompanyId.GetValueOrDefault() == 0)
             {
                 //stripe settings 
-                var domain = "https://localhost:44305/";
+                var domain = "https://localhost:44300/";
                 var options = new SessionCreateOptions
                 {
                     PaymentMethodTypes = new List<string>
@@ -136,8 +138,8 @@ namespace onlineStore.Areas.Admin.Controllers
                 },
                     LineItems = new List<SessionLineItemOptions>(),
                     Mode = "payment",
-                    SuccessUrl = domain + $"UI/cart/OrderConfirmation?id={ShoppingCartVM.OrderHeader.Id}",
-                    CancelUrl = domain + $"UI/cart/index",
+                    SuccessUrl = domain + $"customer/cart/OrderConfirmation?id={ShoppingCartVM.OrderHeader.Id}",
+                    CancelUrl = domain + $"customer/cart/index",
                 };
 
                 foreach (var item in ShoppingCartVM.ListCart)
@@ -173,7 +175,6 @@ namespace onlineStore.Areas.Admin.Controllers
             {
                 return RedirectToAction("OrderConfirmation", "Cart", new { id = ShoppingCartVM.OrderHeader.Id });
             }
-
         }
 
         public IActionResult OrderConfirmation(int id)
@@ -191,7 +192,7 @@ namespace onlineStore.Areas.Admin.Controllers
                     _unitOfWork.Save();
                 }
             }
-            _emailSender.SendEmailAsync(orderHeader.ApplicationUser.Email, "New Order - Orline Store", "<p>New Order Created</p>");
+            _emailSender.SendEmailAsync(orderHeader.ApplicationUser.Email, "New Order - Bulky Book", "<p>New Order Created</p>");
             List<ShoppingCart> shoppingCarts = _unitOfWork.ShoppingCart.GetAll(u => u.ApplicationUserId ==
             orderHeader.ApplicationUserId).ToList();
             HttpContext.Session.Clear();
@@ -200,11 +201,9 @@ namespace onlineStore.Areas.Admin.Controllers
             return View(id);
         }
 
-
         public IActionResult Plus(int cartId)
         {
-            var cart = _unitOfWork.ShoppingCart.GetFirstOrDefault
-                 (c => c.Id == cartId);
+            var cart = _unitOfWork.ShoppingCart.GetFirstOrDefault(u => u.Id == cartId);
             _unitOfWork.ShoppingCart.IncrementCount(cart, 1);
             _unitOfWork.Save();
             return RedirectToAction(nameof(Index));
@@ -212,11 +211,12 @@ namespace onlineStore.Areas.Admin.Controllers
 
         public IActionResult Minus(int cartId)
         {
-            var cart = _unitOfWork.ShoppingCart.GetFirstOrDefault(c => c.Id == cartId);
-
+            var cart = _unitOfWork.ShoppingCart.GetFirstOrDefault(u => u.Id == cartId);
             if (cart.Count <= 1)
             {
                 _unitOfWork.ShoppingCart.Remove(cart);
+                var count = _unitOfWork.ShoppingCart.GetAll(u => u.ApplicationUserId == cart.ApplicationUserId).ToList().Count - 1;
+                HttpContext.Session.SetInt32(SD.SessionCart, count);
             }
             else
             {
@@ -228,13 +228,16 @@ namespace onlineStore.Areas.Admin.Controllers
 
         public IActionResult Remove(int cartId)
         {
-            var cart = _unitOfWork.ShoppingCart.GetFirstOrDefault
-                (c => c.Id == cartId);
-
+            var cart = _unitOfWork.ShoppingCart.GetFirstOrDefault(u => u.Id == cartId);
             _unitOfWork.ShoppingCart.Remove(cart);
             _unitOfWork.Save();
+            var count = _unitOfWork.ShoppingCart.GetAll(u => u.ApplicationUserId == cart.ApplicationUserId).ToList().Count;
+            HttpContext.Session.SetInt32(SD.SessionCart, count);
             return RedirectToAction(nameof(Index));
         }
+
+
+
 
 
         private double GetPriceBasedOnQuantity(double quantity, double price, double price50, double price100)
@@ -243,14 +246,13 @@ namespace onlineStore.Areas.Admin.Controllers
             {
                 return price;
             }
-            else 
+            else
             {
                 if (quantity <= 100)
                 {
                     return price50;
                 }
                 return price100;
-
             }
         }
     }

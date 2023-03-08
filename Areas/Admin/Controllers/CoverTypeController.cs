@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using onlineStore.Data.Repository.IRepository;
 using onlineStore.Models;
 
 namespace onlineStore.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize]
     public class CoverTypeController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;

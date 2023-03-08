@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using onlineStore.Data.Repository;
 using onlineStore.Data.Repository.IRepository;
 using onlineStore.Models;
@@ -6,6 +7,7 @@ using onlineStore.Models;
 namespace onlineStore.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize]
     public class CategoryController : Controller
 	{
         private readonly IUnitOfWork _unitOfWork;

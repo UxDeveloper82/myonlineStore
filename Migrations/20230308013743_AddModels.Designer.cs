@@ -11,8 +11,8 @@ using onlineStore.Data;
 namespace onlineStore.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230307014616_AdMoreModels")]
-    partial class AdMoreModels
+    [Migration("20230308013743_AddModels")]
+    partial class AddModels
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -420,6 +420,7 @@ namespace onlineStore.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Description")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("ISBN")
@@ -427,6 +428,7 @@ namespace onlineStore.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("ImageUrl")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<double>("ListPrice")
