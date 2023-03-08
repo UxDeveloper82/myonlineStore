@@ -2,8 +2,9 @@
 using onlineStore.Data.Repository.IRepository;
 using onlineStore.Models;
 
-namespace onlineStore.Controllers
+namespace onlineStore.Areas.Admin.Controllers
 {
+    [Area("Admin")]
     public class CoverTypeController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;

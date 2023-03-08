@@ -16,6 +16,10 @@ var connectionString = ConnectionHelper.GetConnectionString(builder.Configuratio
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(connectionString));
+/*builder.Services.AddDbContext<ApplicationDbContext>(options =>
+        options.UseSqlite(
+            builder.Configuration.GetConnectionString("DefaultConnection")
+   ));*/
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.Configure<StripeSettings>(builder.Configuration.GetSection("Stripe"));
@@ -66,7 +70,7 @@ app.UseAuthorization();
 app.UseSession();
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{area=UI}/{controller=Home}/{action=Index}/{id?}");
 app.MapRazorPages();
 
 app.Run();

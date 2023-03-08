@@ -3,9 +3,10 @@ using onlineStore.Data.Repository;
 using onlineStore.Data.Repository.IRepository;
 using onlineStore.Models;
 
-namespace onlineStore.Controllers
+namespace onlineStore.Areas.Admin.Controllers
 {
-	public class CategoryController : Controller
+    [Area("Admin")]
+    public class CategoryController : Controller
 	{
         private readonly IUnitOfWork _unitOfWork;
 

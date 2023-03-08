@@ -7,7 +7,7 @@ $(document).ready(function () {
 function loadDataTable() {
     dataTable = $("#tblData").DataTable({
         "ajax": {
-            "url": "/Product/GetAll"
+            "url": "/Admin/Product/GetAll"
         },
         "columns": [
             { "data": "title", "width": "15%" },
@@ -20,10 +20,10 @@ function loadDataTable() {
                 "render": function (data) {
                     return `
                             <div class="text-center">
-                                <a href="/Product/Upsert?id=${data}" class="btn btn-success text-white" style="cursor:pointer">
+                                <a href="/Admin/Product/Upsert?id=${data}" class="btn btn-success text-white" style="cursor:pointer">
                                     <i class="fas fa-edit"></i> 
                                 </a>
-                                <a onclick=Delete("/Product/Delete/${data}") class="btn btn-danger text-white" style="cursor:pointer">
+                                <a onclick=Delete("/Admin/Product/Delete/${data}") class="btn btn-danger text-white" style="cursor:pointer">
                                     <i class="fas fa-trash-alt"></i> 
                                 </a>
                             </div>

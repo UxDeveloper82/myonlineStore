@@ -4,8 +4,9 @@ using onlineStore.Data.Repository.IRepository;
 using onlineStore.Models;
 using onlineStore.Models.ViewModels;
 
-namespace onlineStore.Controllers
+namespace onlineStore.Areas.Admin.Controllers
 {
+    [Area("Admin")]
     public class ProductController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;

@@ -12,7 +12,7 @@
         <div class="navbar-collapse collapse d-lg-inline-flex justify-content-between" id="navbarsExampleDefault">
             <!-- Left Side Of Navbar -->
             <ul class="navbar-nav flex-grow-1">
-                <li class="nav-item">@Html.ActionLink("Shop-All", "Product", "Home", new { area = "" }, new { @class = "nav-link" })</li>
+                 <li class="nav-item">@Html.ActionLink("Shop-All", "Index", "Product", new { area = "UI" }, new { @class = "nav-link" })</li>
                 @if (User.IsInRole(SD.Role_Admin) || User.IsInRole(SD.Role_Employee))
                 {
                     <li class="nav-item">
@@ -24,12 +24,12 @@
 							<a class=nav-link asp-area="Admin" asp-controller="Order" asp-action="Index">
 								Manage Order
 							</a>
-						</li>		
-						<li class="nav-item">
-							<a class=nav-link asp-controller="Cart" asp-action="Index">
-								@await Component.InvokeAsync("ShoppingCart")
-							</a>
 						</li>
+                <li class="nav-item">
+                    <a class=nav-link asp-area="UI" asp-controller="Cart" asp-action="Index">
+                        @await Component.InvokeAsync("ShoppingCart")
+                    </a>
+                </li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <partial name="_LoginPartial" />
