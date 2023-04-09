@@ -16,6 +16,7 @@ namespace onlineStore.Data.Repository
             ShoppingCart = new ShoppingCartRepository(_db);
             OrderHeader = new OrderHeaderRepository(_db);
             ApplicationUser = new ApplicationUserRepository(_db);
+            Company = new CompanyRepository(_db);
         }
 
         public IApplicationUserRepository ApplicationUser { get; private set; }
@@ -30,6 +31,8 @@ namespace onlineStore.Data.Repository
         public IShoppingCartRepository ShoppingCart { get; private set; }
 
         public IOrderHeaderRepository OrderHeader { get; private set; }
+
+        public ICompanyRepository Company { get; private set; }
 
         public void Save()
         {

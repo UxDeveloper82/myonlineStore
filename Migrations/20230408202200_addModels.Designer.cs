@@ -11,8 +11,8 @@ using onlineStore.Data;
 namespace onlineStore.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230308013743_AddModels")]
-    partial class AddModels
+    [Migration("20230408202200_addModels")]
+    partial class addModels
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -164,11 +164,9 @@ namespace onlineStore.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
                     b.Property<string>("LoginProvider")
-                        .HasMaxLength(128)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("ProviderKey")
-                        .HasMaxLength(128)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("ProviderDisplayName")
@@ -206,11 +204,9 @@ namespace onlineStore.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("LoginProvider")
-                        .HasMaxLength(128)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
-                        .HasMaxLength(128)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Value")
